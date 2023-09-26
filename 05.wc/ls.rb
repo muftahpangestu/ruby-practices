@@ -138,4 +138,3 @@ if show_in_detailed_list
 else
   normal_list(files)
 end
-

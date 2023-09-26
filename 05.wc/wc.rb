@@ -53,4 +53,3 @@ else
 
   formatted_print(total_row.to_s, total_word.to_s, total_size.to_s, 'total', wc_options)
 end
-
