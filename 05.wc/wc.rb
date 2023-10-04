@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'fcntl'
 
+ls_output = STDIN.fcntl(Fcntl::F_GETFL, 0) == 0?  $stdin.read : false
+wc_detail = []
+wc_options = ARGV.getopts('lwc')
+input_contents = []
 COLUMN_WIDTH = 10
+
 
 def get_wc_detail(file_text, path = '')
   { 'rows' => file_text.lines.length, 'words' => file_text.split.size, 'size' => file_text.bytesize, 'path' => path }
 end
 
 def print_all?(wc_options)
-  wc_options['l'] || wc_options['w'] || wc_options['c'] ? false : true
+  !(wc_options['l'] || wc_options['w'] || wc_options['c'])
 end
 
 def formatted_print(wc_detail, wc_options)
@@ -20,13 +26,6 @@ def formatted_print(wc_detail, wc_options)
   print wc_detail['size'].to_s.center(COLUMN_WIDTH) if wc_options['c'] || print_all
   puts wc_detail['path']
 end
-
-wc_detail = []
-wc_options = ARGV.getopts('lwc')
-
-ls_output = $stdin.stat.size.positive? ? $stdin.read : false
-
-input_contents = []
 
 if ls_output
   input_contents << [ls_output, '']
