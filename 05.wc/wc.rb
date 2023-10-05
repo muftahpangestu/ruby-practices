@@ -9,7 +9,6 @@ wc_options = ARGV.getopts('lwc')
 input_contents = []
 COLUMN_WIDTH = 10
 
-
 def get_wc_detail(file_text, path = '')
   { 'rows' => file_text.lines.length, 'words' => file_text.split.size, 'size' => file_text.bytesize, 'path' => path }
 end
@@ -27,14 +26,14 @@ def formatted_print(wc_detail, wc_options)
   puts wc_detail['path']
 end
 
-if ls_output
-  input_contents << [ls_output, '']
-else
+unless ARGV.empty?
   ARGV.each do |path|
     File.open(path, 'r') do |file|
       input_contents << [file.read, path]
     end
   end
+else
+  input_contents << [ls_output, '']
 end
 
 total_row = 0
