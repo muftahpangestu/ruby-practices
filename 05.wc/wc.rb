@@ -3,7 +3,7 @@
 require 'optparse'
 require 'fcntl'
 
-ls_output = STDIN.fcntl(Fcntl::F_GETFL, 0) == 0?  $stdin.read : false
+ls_output = $stdin.fcntl(Fcntl::F_GETFL, 0).zero? ? $stdin.read : false
 wc_detail = []
 wc_options = ARGV.getopts('lwc')
 input_contents = []
@@ -26,14 +26,14 @@ def formatted_print(wc_detail, wc_options)
   puts wc_detail['path']
 end
 
-unless ARGV.empty?
+if ARGV.empty?
+  input_contents << [ls_output, '']
+else
   ARGV.each do |path|
     File.open(path, 'r') do |file|
       input_contents << [file.read, path]
     end
   end
-else
-  input_contents << [ls_output, '']
 end
 
 total_row = 0
